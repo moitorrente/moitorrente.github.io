@@ -8,38 +8,38 @@ var canvas;
 
 
 function setup() {
-//	canvas = createCanvas(window.innerWidth, window.innerHeight);
-	createCanvas(800, 600);
-	background(255);
-	stroke(255);
+	canvas = createCanvas(window.innerWidth, window.innerHeight*0.66);
+	background(0);
 	colorMode(HSB);
-	textAlign(CENTER,CENTER);
-	fill(0,0,255);
-	noStroke();
 
-	sizeSlider = createSlider(1,50,20,1);
-	sizeSlider.style('width');
-	sizeSlider.parent('size-list');
+	resetButton = createButton('Reset');
+	resetButton.mousePressed(resetBackground);
+	resetButton.addClass('waves-effect waves-light btn');
+	resetButton.parent('reset-list');
+
+	strokeSlider = createSlider(1,10,4,1);
+	strokeSlider.style('width');
+	strokeSlider.parent('stroke-list');
 
 	colorSlider = createSlider(0,255,255,1);
 	colorSlider.style('width');
 	colorSlider.parent('color-list');
 
-	resetButton = createButton('Reset');
-//	resetButton.position(width * 0.01, height *0.015);
-	resetButton.mousePressed(resetBackground);
-	resetButton.addClass('waves-effect waves-light btn');
-	resetButton.parent('reset-list');
-
+	sizeSlider = createSlider(1,50,20,1);
+	sizeSlider.style('width');
+	sizeSlider.parent('size-list');
 
 }
 
 function draw() {
 	
-	var color = colorSlider.value();
-	stroke(color, 100, 100, 1);
-
+	let strokeLine = strokeSlider.value()
+	let color = colorSlider.value();
 	spacing = sizeSlider.value();
+
+	stroke(color, 100, 100, 1);
+	strokeWeight(strokeLine);
+
 	if (random(1) > 0.5) {
 		line (x, y, x + spacing, y + spacing);
 	} else {
@@ -53,18 +53,10 @@ function draw() {
 		y = y + spacing;
 	}
 
-};
+}
 
 function resetBackground(){
-	background(255);
+	background(0);
 	x = 0;
 	y = 0;
-};
-
-// window.onresize = function() {
-//   var w = window.innerWidth;
-//   var h = window.innerHeight; 
-//   canvas.size(w,h);
-//   width = w;
-//   height = h;
-// };
+}
