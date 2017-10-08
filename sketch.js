@@ -8,8 +8,8 @@ var canvas;
 
 
 function setup() {
-	canvas = createCanvas(window.innerWidth, window.innerHeight);
-	//createCanvas(800, 600);
+//	canvas = createCanvas(window.innerWidth, window.innerHeight);
+	createCanvas(800, 600);
 	background(255);
 	stroke(255);
 	colorMode(HSB);
