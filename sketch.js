@@ -10,7 +10,7 @@ function setup() {
 	smooth();
 
 	var sliderDiv = createDiv('');
-	slider = createSlider(1, 200, 5);
+	slider = createSlider(1, 50, 5);
 	slider.style('width', '200px');
 	var sliderDiv2 = createDiv('');
 	waveFormSelect = createSelect('Seleccion');
