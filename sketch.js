@@ -1,18 +1,24 @@
 let initialAmplitude = 100;
 let time = 0;
 let sineWave = [];
-let slider;
+let sizeSlider;
 let waveFormSelect;
+let sizeSliderDiv;
+let sizeValueSliderSpan;
 
 function setup() {
 	canvas = createCanvas(1000, 600);
 	background(0);
 	smooth();
 
-	var sliderDiv = createDiv('');
-	slider = createSlider(1, 50, 5);
-	slider.style('width', '200px');
-	var sliderDiv2 = createDiv('');
+	sizeSliderDiv = createDiv('Size: ');
+	sizeSlider = createSlider(1, 50, 5);
+	sizeSlider.style('width', '200px');
+	sizeSlider.parent(sizeSliderDiv);
+	sizeValueSliderSpan = createSpan(sizeSlider.value());
+	sizeValueSliderSpan.parent(sizeSliderDiv);
+
+
 	waveFormSelect = createSelect('Seleccion');
 	waveFormSelect.option('Square', 0);
 	waveFormSelect.option('Sawtooth', 1);
@@ -23,11 +29,12 @@ function setup() {
 function draw() {
 	background(0);
 	translate(300, 600 / 2);
-
+   // document.getElementById('sizeValueSliderSpan').innerHTML = "sizeSlider.value()";
+   sizeValueSliderSpan.html(sizeSlider.value());
 	let x = 0;
 	let y = 0;
 
-	for (let i = 0; i < slider.value(); i++) {
+	for (let i = 0; i < sizeSlider.value(); i++) {
 		let prevx = x;
 		let prevy = y;
 		let waveformIndex = int(waveFormSelect.value());
