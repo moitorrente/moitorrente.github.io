@@ -1,55 +1,79 @@
 const sections = 20;
 const width = 600;
 const height = 690;
-const scale = width / sections;
+const scal = width / sections;
 let snake;
 let apple;
+let lastx = 0;
+let lasty = 0;
 
-let appleImg;
-let snakeHeadUpImg;
-let snakeHeadRightImg;
-let snakeHeadDowmImg;
-let snakeHeadLeftImg;
-let snakeBodyVerImg;
-let snakeBodyHorImg;
-let turn1;
-let turn2;
-let turn3;
-let turn4;
+let foodImg;
+
+let snakeHead = [4]
+let snakeBody = [2];
+let snakeBodyEat = [2];
+let turnImgs = [4];
+let turnEatImgs = [4];
+
+let initialHead;
+
 let tailUp;
 let tailDown;
 let tailRight;
 let tailLeft;
 let trophy;
 let deathImg;
+let bodyEatHor;
+let bodyEeatVer;
 let punctuation = 0;
 let maxPunctuation = 0;
 let deaths = 0;
+p5.disableFriendlyErrors = true;
+
+let buttonUp;
+
 
 function preload() {
-    appleImg = loadImage('./assets/img/apple.png');
-    snakeHeadUpImg = loadImage('./assets/img/headUp.png');
-    snakeHeadRightImg = loadImage('./assets/img/headRight.png');
-    snakeHeadDownImg = loadImage('./assets/img/headDown.png');
-    snakeHeadLeftImg = loadImage('./assets/img/headLeft.png');
-    snakeBodyVerImg = loadImage('./assets/img/bodyVer.png');
-    snakeBodyHorImg = loadImage('./assets/img/bodyHor.png');
-    turn1 = loadImage('./assets/img/turn1.png');
-    turn2 = loadImage('./assets/img/turn2.png');
-    turn3 = loadImage('./assets/img/turn3.png');
-    turn4 = loadImage('./assets/img/turn4.png');
-    tailUp = loadImage('./assets/img/tailUp.png');
-    tailDown = loadImage('./assets/img/tailDown.png');
-    tailRight = loadImage('./assets/img/tailRight.png');
-    tailLeft = loadImage('./assets/img/tailLeft.png');
+    foodImg = loadImage('./assets/img/food/apple.png');
+    initialHead = loadImage('./assets/img/snake/initialHead.png');
+    snakeHead[0] = loadImage('./assets/img/snake/headUp.png');
+    snakeHead[1] = loadImage('./assets/img/snake/headRight.png');
+    snakeHead[2] = loadImage('./assets/img/snake/headDown.png');
+    snakeHead[3] = loadImage('./assets/img/snake/headLeft.png');
+    snakeBody[0] = loadImage('./assets/img/snake/bodyVer-2.png');
+    snakeBody[1] = loadImage('./assets/img/snake/bodyHor-2.png');
+    turnImgs[0] = loadImage('./assets/img/snake/turn0-2.png');
+    turnImgs[1] = loadImage('./assets/img/snake/turn1-2.png');
+    turnImgs[2] = loadImage('./assets/img/snake/turn2-2.png');
+    turnImgs[3] = loadImage('./assets/img/snake/turn3-2.png');
+    turnEatImgs[0] = loadImage('./assets/img/snake/turnEat0.png');
+    turnEatImgs[1] = loadImage('./assets/img/snake/turnEat1.png');
+    turnEatImgs[2] = loadImage('./assets/img/snake/turnEat2.png');
+    turnEatImgs[3] = loadImage('./assets/img/snake/turnEat3.png');
+    snakeBodyEat[0] = loadImage('./assets/img/snake/bodyEatVer.png');
+    snakeBodyEat[1] = loadImage('./assets/img/snake/bodyEatHor.png');
+
+    tailUp = loadImage('./assets/img/snake/tailUp.png');
+    tailDown = loadImage('./assets/img/snake/tailDown.png');
+    tailRight = loadImage('./assets/img/snake/tailRight.png');
+    tailLeft = loadImage('./assets/img/snake/tailLeft.png');
     trophy = loadImage('./assets/img/trophy.png');
     deathImg = loadImage('./assets/img/deaths.png');
 }
 
 function setup() {
-    canvas = createCanvas(width, height);
     snake = new Snake();
-    apple = new Apple();
+    apple = new Food();
+    canvas = createCanvas(width, height);
+    buttonUp = createButton('Up');
+    buttonDown = createButton('Down');
+    buttonRight = createButton('Right');
+    buttonLeft = createButton('Left');
+
+
+   
+
+
     frameRate(10);
     let options = {
         preventDefault: true
@@ -62,13 +86,15 @@ function setup() {
 }
 
 function draw() {
+    translate(0, 0);
+    //scale(1.1);
+
     background(139, 167, 82);
     drawGrid();
     showPanel();
 
     if (snake.die()) {
         alert('Has perdido');
-        snake.size = 0;
         deaths++;
     }
     apple.show();
@@ -82,56 +108,71 @@ function draw() {
 }
 
 function drawGrid() {
-    stroke(218, 235, 183);
+    stroke(150, 180, 123);
     for (let i = 0; i < sections; i++) {
-        line(i * scale, 0, i * scale, height);
-        line(0, i * scale, width, i * scale);
+        line(i * scal, 0, i * scal, height);
+        line(0, i * scal, width, i * scal);
     }
 }
 
 function keyPressed() {
-    if (keyCode === RIGHT_ARROW && snake.xspeed != -1) {
-        snake.setDirection(1, 0);
-    }
-    if (keyCode === UP_ARROW && snake.yspeed != 1) {
-        snake.setDirection(0, -1);
-    }
-    if (keyCode === DOWN_ARROW && snake.yspeed != -1) {
-        snake.setDirection(0, 1);
-    }
-    if (keyCode === LEFT_ARROW && snake.xspeed != 1) {
-        snake.setDirection(-1, 0);
-    }
-    if (key === 'A') {
-        snake.addTail();
+    if (lastx != snake.x || lasty != snake.y || snake.xdir == 0 && snake.ydir == 0) {
+        if (keyCode === RIGHT_ARROW && snake.xdir != -1) {
+            snake.setDirection(1, 0);
+        }
+        if (keyCode === UP_ARROW && snake.ydir != 1) {
+            snake.setDirection(0, -1);
+        }
+        if (keyCode === DOWN_ARROW && snake.ydir != -1) {
+            snake.setDirection(0, 1);
+        }
+        if (keyCode === LEFT_ARROW && snake.xdir != 1) {
+            snake.setDirection(-1, 0);
+        }
+        if (key === 'A') {
+            snake.addTail();
+        }
+        lastx = snake.x;
+        lasty = snake.y;
     }
 }
 
 function swiped(event) {
-    if (event.direction == 4 && snake.xspeed != -1) {
-        snake.setDirection(1, 0);
-    } else if (event.direction == 8 && snake.yspeed != 1) {
-        snake.setDirection(0, -1);
-    } else if (event.direction == 16 && snake.yspeed != -1) {
-        snake.setDirection(0, 1);
-    } else if (event.direction == 2 && snake.xspeed != 1) {
-        snake.setDirection(-1, 0);
+    if (lastx != snake.x || lasty != snake.y || snake.xdir == 0 && snake.ydir == 0) {
+
+        if (event.direction == 4 && snake.xdir != -1) {
+            snake.setDirection(1, 0);
+        } else if (event.direction == 8 && snake.ydir != 1) {
+            snake.setDirection(0, -1);
+        } else if (event.direction == 16 && snake.ydir != -1) {
+            snake.setDirection(0, 1);
+        } else if (event.direction == 2 && snake.xdir != 1) {
+            snake.setDirection(-1, 0);
+        }
+        lastx = snake.x;
+        lasty = snake.y;
     }
+}
+
+function setUpDirection(){
+        snake.setDirection(0, -1);
+
 }
 
 function showPanel() {
     fill(62, 76, 34);
-    rect(0, height - 3 * scale, width, 3 * scale);
-    image(appleImg, width - scale * 19.5, height - scale * 2.5, scale * 2, scale * 2);
+    rect(0, height - 3 * scal, width, 3 * scal);
+    image(foodImg, width - scal * 19.5, height - scal * 2.5, scal * 2, scal * 2);
     textSize(42);
     fill(255);
-    text('x ' + punctuation, width - scale * 17, height - scale)
+    text('x ' + punctuation, width - scal * 17, height - scal)
     if (punctuation > maxPunctuation) {
         maxPunctuation = punctuation;
     }
-    image(trophy, width - scale * 13, height - scale * 2.5, scale * 2, scale * 2);
-    text('x ' + maxPunctuation, width - scale * 12.5 + 2 * scale, height - scale)
+    image(trophy, width - scal * 13, height - scal * 2.5, scal * 2, scal * 2);
+    text('x ' + maxPunctuation, width - scal * 12.5 + 2 * scal, height - scal)
 
-    image(deathImg, width - scale * 6, height - scale * 2.5, scale * 2, scale * 2);
-    text('x ' + deaths, width - scale * 5.5 + 2 * scale, height - scale)
+    image(deathImg, width - scal * 6, height - scal * 2.5, scal * 2, scal * 2);
+    text('x ' + deaths, width - scal * 5.5 + 2 * scal, height - scal);
+
 }
