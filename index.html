@@ -1,16 +1,444 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-	<title>Snake</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-    <script src="sketch.js"></script>
-	<script src="Snake.js"></script>
-	<script src="Apple.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analizador de copys</title>
+  <script defer src="outrec.js"></script>
+  <script defer src="table-export.js"></script>
+  <script defer src="script.js"></script>
+  <script defer src="urlupdater.js"></script>
+  <script defer src="Field.js"></script>
+  <script defer src="Entry.js"></script>
+
+  <!-- Latest compiled and minified CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"
+    integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
+    integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
+
+
+
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
 </head>
+
 <body>
+
+  <nav class="navbar navbar-expand-md navbar-light bg-light mb-3">
+    <div class="container-fluid">
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
+        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button> -->
+
+
+      <a class="navbar-brand">
+        <div class="mx-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-book mb-2"
+            viewBox="0 0 16 16">
+            <path
+              d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
+          </svg>
+          <span class="px-4 fs-2">
+            Analizador de copys
+          </span>
+          <span>
+            v0.1
+          </span>
+        </div>
+      </a>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <svg class="button" data-bs-toggle="modal" data-bs-target="#options-modal" xmlns="http://www.w3.org/2000/svg"
+          width="22" height="22" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+          <path
+            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+          <path
+            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+        </svg>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  <div class="container-fluid">
+    <div class="row m-3 table-responsive">
+      <div class="col-md-7 table-responsive " id="table">
+
+        <table class="table table-hover text-center tab">
+          <thead>
+            <tr>
+              <th scope="col">Nivel</th>
+              <th scope="col">Profundidad</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Tipo</th>
+
+              <th scope="col">Picture</th>
+              <th scope="col">Modificador</th>
+              <th scope="col">Inicio</th>
+              <th scope="col">Longitud</th>
+              <th scope="col">Fin</th>
+              <th scope="col">Validación</th>
+
+            </tr>
+          </thead>
+          <tbody id="table-body">
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-5" id="parent">
+        <div class="row mb-3 containers">
+          <div class="col-md-12 cont">
+            <div class="header" id="header">
+              <div class="container">
+                <div class="row">
+
+                  <nav class="d-flex bd-highlight mb-3">
+                    <div class="me-auto p-1 bd-highlight">
+                      <span class="align-middle navbar-brand h1 navbar-toggler button" data-bs-toggle="collapse"
+                        data-bs-target="#input-process">Input</span>
+                    </div>
+
+
+                    <div class="me-auto p-1 bd-highlight">
+                      <svg id="run" class="button" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                        fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                        <path
+                          d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                      </svg>
+                    </div>
+                    <div class="p-1 bd-highlight">
+                      <input type="file" id="file" style="display: none;" />
+                      <svg class="button" onclick="document.getElementById('file').click();"
+                        xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
+                        <path
+                          d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                        <path
+                          d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                      </svg>
+                    </div>
+
+                    <div class="p-1 bd-highlight navbar-toggler" data-bs-toggle="collapse"
+                      data-bs-target="#download-navbar">
+                      <svg class="button" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                        <path
+                          d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
+                        <path
+                          d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+                      </svg>
+                    </div>
+
+                    <div class="p-1 bd-highlight" data-toggle="tooltip" title="Hooray!">
+                      <svg class="button clear" id="clear" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                      </svg>
+                    </div>
+
+                    <div class="p-1 bd-highlight">
+                      <svg class="button" id="input-expand" data-bs-toggle="modal" data-bs-target="#input-modal"
+                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                          d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z" />
+                      </svg>
+                    </div>
+
+
+                  </nav>
+                </div>
+              </div>
+            </div>
+
+            <div class="collapse expand" id="input-process">
+              <div class="bg-light px-4 py-2 sm">
+
+                <div class="form-check form-switch mb-2 form-swtich-sm">
+                  <input class="form-check-input" type="checkbox" value="" id="normalize" checked>
+                  <label class="form-check-label" for="normalize">
+                    Normalizar
+                  </label>
+                </div>
+                <div class="form-check form-switch mb-2 ">
+                  <input class="form-check-input" type="checkbox" value="" id="remove-prefix" checked>
+                  <label class="form-check-label" for="remove-prefix">
+                    Quitar prefijo
+                  </label>
+                </div>
+                <div class="form-check form-switch mb-2 ">
+                  <input class="form-check-input" type="checkbox" value="" id="remove-sufix" checked>
+                  <label class="form-check-label" for="remove-sufix">
+                    Quitar sufijo
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <textarea rows="12" contentEditable="true" class="form-control textarea input-text" cols="72"
+              id="input-text">
+                01 COPY.
+                02 TT-SUBESTRUCTURA.
+                03 CAMPO1:;: PIC 9V99 SIGN TRAILING SEPARATE CHARACTER.
+                02 SUBCONOCCURS OCCURS 3 TIMES.
+                03 CAMPO3 PIC X(3).
+                03 CAMPO4 PIC X(2).
+              </textarea>
+          </div>
+        </div>
+        <div class="row" class="containers">
+          <div class="col-md-12">
+            <div class="header" id="header">
+              <div class="container">
+                <div class="row">
+
+                  <div class="d-flex bd-highlight mb-3">
+                    <div class="me-auto p-1 bd-highlight">
+                      <span class="align-middle button navbar-brand h1 navbar-toggler" data-bs-toggle="collapse"
+                        data-bs-target="#output-type">Output</span>
+                    </div>
+
+
+
+                    <div class="me-auto p-1 bd-highlight">
+                      <svg id="csv" class="button" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                        fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                        <path
+                          d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                      </svg>
+                    </div>
+
+
+
+                    <div class="p-1 bd-highlight navbar-toggler" data-bs-toggle="collapse"
+                      data-bs-target="#download-navbar">
+                      <svg class="button" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                        <path
+                          d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
+                        <path
+                          d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+                      </svg>
+                    </div>
+
+
+                    <div class="p-1 bd-highlight button" id="copy-button">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-clipboard" viewBox="0 0 16 16">
+                        <path
+                          d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                        <path
+                          d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                      </svg>
+                    </div>
+
+                    <div class="p-1 bd-highlight">
+
+                      <svg class="button" id="clear-output" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                      </svg>
+                    </div>
+
+                    <div class="p-1 bd-highlight">
+                      <svg class="button" id="output-expand" data-bs-toggle="modal" data-bs-target="#output-modal"
+                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                          d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z" />
+                      </svg>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="collapse expand" id="output-type">
+              <div class="bg-light px-4 py-2">
+                <select class="form-select form-select-sm" aria-label=".form-select-sm" id="output-type-selector">
+                  <option value="outrec" selected>OUTREC para .csv</option>
+                  <option value="table-md">Tabla en .md</option>
+                  <option value="table-csv">Tabla en .csv</option>
+                  <option value="table-html">Tabla en .html</option>
+                  <option value="json">Estructura en .json</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="collapse expand" id="download-navbar">
+              <div class="bg-light px-4 py-2">
+                <form>
+                  <div class="input-group" id="input-size-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Nombre fichero"
+                      aria-label="Nombre fichero" id="download-name">
+                    <button class="btn btn-outline-success btn-sm" type="button" id="download">Descargar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <textarea rows="15" class="form-control" cols="72" id="output-text">
+            </textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="options-modal" tabindex="-1" aria-labelledby="options-modal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Opciones</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <div class="px-4 py-2">
+              <form class>
+                <label for="input-size-group" class="form-label fw-light">Tamaño letra input</label>
+                <div class="input-group" id="input-size-group">
+                  <input type="number" class="form-control form-control-sm" placeholder="Tamaño fuente"
+                    aria-label="Tamaño fuente" id="input-font-size" value="16">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" id="input-font-reset">Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="px-4 py-2">
+              <form class>
+                <label for="output-size-group" class="form-label fw-light">Tamaño letra output</label>
+                <div class="input-group" id="output-size-group">
+
+                  <input type="number" class="form-control form-control-sm" placeholder="Tamaño fuente"
+                    aria-label="Tamaño fuente" id="output-font-size" value="16">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" id="output-font-reset">Reset</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="px-5 py-2 sm">
+
+            <div class="form-check form-switch mb-2 form-swtich-sm">
+              <input class="form-check-input" type="checkbox" value="" id="url-update-input" checked>
+              <label class="form-check-label" for="normalize">
+                Actualizar la URL con el cambio de input
+              </label>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm">Reset</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="input-modal" tabindex="-1" aria-labelledby="input-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <div class="modal-body bg-light rounded">
+
+            <div class="col-md-12 p-2">
+              <div class="row">
+
+                <nav class="d-flex bg-light mb-3">
+                  <div class="me-auto p-1 bg-light">
+                    <span class="align-middle navbar-brand h1">Input</span>
+                  </div>
+
+                  <div class="p-1 bd-highlight">
+                    <svg class="button clear" id="clear" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                      fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                      <path fill-rule="evenodd"
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                    </svg>
+                  </div>
+
+                  <div class="p-1 bg-light">
+                    <svg class="button" data-bs-toggle="modal" data-bs-target="#input-modal"
+                      xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                      class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd"
+                        d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5z" />
+                      <path fill-rule="evenodd"
+                        d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0v-5z" />
+                    </svg>
+                  </div>
+                </nav>
+              </div>
+
+              <textarea rows="30" class="form-control input-text" cols="75" id="input-text-xp">
+              </textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="output-modal" tabindex="-1" aria-labelledby="output-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <div class="modal-body bg-light rounded">
+
+            <div class="col-md-12 p-2">
+              <div class="row">
+
+                <nav class="d-flex bg-light mb-3">
+                  <div class="me-auto p-1 bg-light">
+                    <span class="align-middle navbar-brand h1">Output</span>
+                  </div>
+
+                  <div class="p-1 bg-light">
+                    <svg class="button" data-bs-toggle="modal" data-bs-target="#output-modal"
+                      xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                      class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd"
+                        d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5z" />
+                      <path fill-rule="evenodd"
+                        d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0v-5z" />
+                    </svg>
+                  </div>
+                </nav>
+              </div>
+
+              <textarea rows="30" class="form-control" cols="75" id="output-text-xp">
+                </textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </body>
+
 </html>
-<footer>
-</footer>
